@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .and()
                 .logout()
-                .logoutUrl("/user/logout")
+                .logoutUrl("/users/**/logout")
                 .clearAuthentication(true)
                 .logoutSuccessUrl("/")
                 .and()

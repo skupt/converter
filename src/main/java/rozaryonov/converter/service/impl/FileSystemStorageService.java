@@ -55,6 +55,33 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public void store(MultipartFile file, String username) {
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file.");
+            }
+            Path destinationFile = this.rootLocation.resolve(username).resolve(
+                            Paths.get(file.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            if (!Files.exists(destinationFile.getParent())) {
+                Files.createDirectories(destinationFile.getParent());
+            }
+            if (!destinationFile.getParent().equals(this.rootLocation.resolve(username).toAbsolutePath())) {
+                // This is a security check
+                throw new StorageException(
+                        "Cannot store file outside current directory.");
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to store file.", e);
+        }
+    }
+
+    @Override
     public Stream<Path> loadAll() {
         try {
             return Files.walk(this.rootLocation, 1)
@@ -68,14 +95,54 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public Stream<Path> loadAll(String username) {
+        Path userRootLocation = this.rootLocation.resolve(username);
+        if (userRootLocation.toFile().isDirectory()) {
+            try {
+                return Files.walk(userRootLocation, 1)
+                        .filter(path -> !path.equals(userRootLocation))
+                        .map(userRootLocation::relativize);
+            } catch (IOException e) {
+                throw new StorageException("Failed to read stored files", e);
+            }
+        } else {
+            return Stream.empty();
+        }
+    }
+
+    @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
+    }
+
+    @Override
+    public Path load(String filename, String username) {
+        return rootLocation.resolve(username).resolve(filename);
     }
 
     @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = load(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);
+
+            }
+        }
+        catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
+    @Override
+    public Resource loadAsResource(String filename, String username) {
+        try {
+            Path file = load(filename, username);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;

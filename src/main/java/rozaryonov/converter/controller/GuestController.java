@@ -2,6 +2,7 @@ package rozaryonov.converter.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +32,12 @@ public class GuestController {
     }
 
     @GetMapping("/authorized_zone_redirection")
+    @Transactional
     public String redirectToAuthrizedZone(Principal principal, HttpSession session) {
         User authenticatedUser = userRepository.findByLogin(principal.getName()).orElseThrow(
                 ()-> new UserNotFoundException("User with login = " + principal.getName() + "hasn't been found"));
-        session.setAttribute("user", authenticatedUser);
-        return "redirect:/user/";
+        session.setAttribute("currentUser", authenticatedUser);
+        return "redirect:/users/" + authenticatedUser.getLogin() + "/files/";
     }
 
     @GetMapping("/users/new_user_form")
@@ -58,7 +60,7 @@ public class GuestController {
         return page;
     }
 
-    @GetMapping("/user/logout")
+    @GetMapping("/users/{userLogin}/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
