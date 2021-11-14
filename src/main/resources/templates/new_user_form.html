@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	function validateForm() {
+		var p = document.getElementById("password").value;
+		var r = document.getElementById("repeat").value;
+		if (p == r) {
+			return true;
+		}
+		alert("Please re-enter your password");
+		return false;
+	}
+    </script>
+
+    <title th:text="#{register.registerTitle}">Register</title>
+</head>
+<body>
+
+<div class="container">
+    <div id="loginDiv" class="jumbotron">
+        <h1 th:text="#{register.registerHead}"></h1>
+
+        <form id="new_person_form" th:method="POST" th:action="@{/users/}" th:object="${user}"
+              onsubmit="return validateForm()">
+            <div>
+                <label for="login" th:text="#{register.login}"></label>
+                <p><input type="text" th:field="*{login}" id="login"></p>
+                <p th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Login error</p>
+            </div>
+            <div>
+                <label th:text="#{register.password}"></label>
+                <p><input type="password" th:field="*{password}" id="password"/></p>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
+            </div>
+            <div>
+                <label th:text="#{register.repeatPass}"></label>
+                <p><input type="password" name="pass" id="repeat"/></p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" name="button"><span
+                    th:text="#{register.register}"></span></button>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>

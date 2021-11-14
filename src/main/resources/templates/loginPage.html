@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <title th:text="#{pageLogin.titleLogin}">Login</title>
+</head>
+<body>
+<div class="container">
+
+    <div id="login" class="jumbotron">
+
+        <h1 th:text="#{pageLogin.titleLogin}">Login</h1>
+
+        <!-- /login?error=true -->
+        <div th:if="${#request.getParameter('error') == 'true'}"
+             style="color: red; margin: 10px 0px;">
+            Login Failed!!!<br/> Reason : <span
+                th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+                th:text="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+			Static summary </span>
+        </div>
+
+
+        <form name='f' th:action="@{/j_spring_security_check}" method='POST'>
+            <label for="username" th:text="#{pageLogin.yourLogin}">Your login</label>
+            <input type='text' id='username' name='username' value='' class="form-control">
+            <label for="password" th:text="#{pageLogin.yourPassword}">Your password</label>
+            <input type='password' id='password' name='password' class="form-control"/>
+            <label for="remember-me" th:text="#{pageLogin.rememberMe}">Remember Me?</label>
+            <input type="checkbox" id="remember-me" name="remember-me"/>
+            <br>
+            <button class="btn btn-primary gtn-lg" name="submit" type="submit" value="submit"
+                    th:text="#{pageLogin.buttonSubmit}">Submit
+            </button>
+        </form>
+        <p><a th:href="@{/users/new_user_form}" th:text="#{Or register as new user}">Or register as new user</a></p>
+
+    </div>
+
+
+</div>
+</body>
+</html>
