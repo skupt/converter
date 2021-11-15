@@ -13,7 +13,7 @@ import rozaryonov.converter.exception.UserNotFoundException;
 import rozaryonov.converter.model.Role;
 import rozaryonov.converter.model.User;
 import rozaryonov.converter.repository.UserRepository;
-import rozaryonov.converter.service.impl.UserService;
+import rozaryonov.converter.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
