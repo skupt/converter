@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import rozaryonov.converter.exception.StorageFileNotFoundException;
 import rozaryonov.converter.service.StorageService;
 
 import java.io.IOException;
@@ -59,11 +58,6 @@ public class FileUploadController {
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
         return "redirect:/users/" + principal.getName() + "/files/";
-    }
-
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
     }
 
 }

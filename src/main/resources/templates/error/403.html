@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en_US">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <title th:text="#{403.title}"></title>
+</head>
+<body>
+<div class="container">
+    <div class = "jumbotron">
+        <h1 th:text="#{403.head}"></h1>
+        <h2 th:text="${errorDescription}"></h2>
+        <p><a th:href="@{/}" th:text="#{403.login}"></a></p>
+        <p><a th:href="@{/}" th:text="#{403.index}"></a></p>
+    </div>
+</div>
+</body>
+</html>
