@@ -54,14 +54,16 @@ public class ApacheItextAdapter {
         for (Map.Entry<CoPage.CoPageCoords, CoPage> entry : pagesOnGreedMap.entrySet()) {
             CoPage coPage = entry.getValue();
             Cell[][] cellArray = coPage.getCellArray();
-            int numberOfColumns = cellArray[0].length;
+            int numberOfColumns = cellArray.length; // todo cellArray[0].length
             int numberOfRows = cellArray.length;
             PdfPTable pdfTable = new PdfPTable(numberOfColumns);
             pdfTable.setWidths(coPage.calculateRelativeWidths());
-            for (Cell[] cellsOfRow : cellArray) {
-                for (Cell cell : cellsOfRow) {
+            for (int i=0; i<cellArray[0].length; i++) { //columns
+                for (int j=0; j<cellArray.length; j++) { //rows
+                    Cell cell = cellArray[j][i];
                     PdfPCell pdfCell = createPdfCell(cell);
                     pdfTable.addCell(pdfCell);
+
                 }
             }
             openedDocument.add(pdfTable);
@@ -99,9 +101,6 @@ public class ApacheItextAdapter {
     private void createPagesOnGreedMap() throws IOException {
         CoDocument coDocument = buildStructureOfCoDocument();
         for (int i = 0; i < coDocument.getSheets().size(); i++) {
-//            File inputFile = Paths.get(System.getProperty("user.dir"), "/util-files/tab.xls").toFile();
-//            FileInputStream inputStream = new FileInputStream(inputFile);
-//            HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
             HSSFSheet hssfSheet = apacheHssfWorkbook.getSheetAt(i);
             Iterator<Row> rowIterator = hssfSheet.iterator();
             int currentRow = 0;
@@ -117,9 +116,9 @@ public class ApacheItextAdapter {
                     CoWorksheet currentCoSheet = coDocument.getSheets().get(i);
                     CoPage.CoPageCoords coPageCoords= calculatePageCoords(currentRow, currentColumn, currentCoSheet);
                     int columnNumBegin = currentCoSheet.getGrid().getLastColumnNumberForGrid().get(coPageCoords.getX()); //todo
-                    int columnNumEnd = currentCoSheet.getGrid().getLastColumnNumberForGrid().get(coPageCoords.getX());
+                    int columnNumEnd = currentCoSheet.getGrid().getLastColumnNumberForGrid().get(coPageCoords.getX()+1);
                     int rowNumBegin  = currentCoSheet.getGrid().getLastRowNumberForGrid().get(coPageCoords.getY());
-                    int rowNumEnd  = currentCoSheet.getGrid().getLastRowNumberForGrid().get(coPageCoords.getY());
+                    int rowNumEnd  = currentCoSheet.getGrid().getLastRowNumberForGrid().get(coPageCoords.getY()+1);
                     int [] columnRelativeWidthArray = new int[columnNumEnd-columnNumBegin];
                     for(int a = columnNumBegin, b=0; a < columnNumEnd; a++, b++ ) {
                         columnRelativeWidthArray [b] = currentCoSheet.getClumnWidth().get(a);
@@ -182,7 +181,7 @@ public class ApacheItextAdapter {
      * @param hssfSheet
      * @param coWorksheet
      */
-    private void buidCoWorksheet(HSSFSheet hssfSheet, CoWorksheet coWorksheet, CoDocument coDocument) {
+    public void buidCoWorksheet(HSSFSheet hssfSheet, CoWorksheet coWorksheet, CoDocument coDocument) {
         Iterator<Row> rowIterator = hssfSheet.iterator();
         int lastColumnInTable=-1;
         int numberOfRows = 0;

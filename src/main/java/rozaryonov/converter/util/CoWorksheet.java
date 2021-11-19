@@ -38,6 +38,12 @@ public class CoWorksheet {
     public static class Grid {
         List<Integer> lastColumnNumberForGrid = new ArrayList<>();
         List<Integer> lastRowNumberForGrid = new ArrayList<>();
+
+        public Grid() {
+            lastColumnNumberForGrid.add(0);
+            lastRowNumberForGrid.add(0);
+        }
     }
+
 
 }

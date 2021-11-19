@@ -25,7 +25,7 @@ public class CoPage {
     }
 
     void setCellToArray(Cell cell, int absColumnNum, int absRowNum) {
-        cellArray[absColumnNum-columnNumberBegin] [absRowNum-rowNumberBegin] = cell;
+        cellArray[absColumnNum-columnNumberBegin-1] [absRowNum-rowNumberBegin-1] = cell; //todo
     }
 
     float[] calculateRelativeWidths() {
