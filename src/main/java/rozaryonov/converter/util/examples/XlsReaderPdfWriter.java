@@ -1,4 +1,4 @@
-package rozaryonov.converter.util;
+package rozaryonov.converter.util.examples;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;

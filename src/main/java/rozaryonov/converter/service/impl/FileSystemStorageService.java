@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private Path rootLocation;
+    private final Path rootLocation;
 
     @Autowired
     public FileSystemStorageService(@Value("${storage.rootLocation}") String rootLocatonString) {
@@ -36,9 +36,11 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFile = this.rootLocation.resolve(username).resolve(
-                            Paths.get(file.getOriginalFilename()))
-                    .normalize().toAbsolutePath();
+            Path destinationFile = this.rootLocation
+                    .resolve(username)
+                    .resolve(Paths.get(file.getOriginalFilename().replaceAll("\\s", "_")))
+                    .normalize()
+                    .toAbsolutePath();
             if (!Files.exists(destinationFile.getParent())) {
                 Files.createDirectories(destinationFile.getParent());
             }

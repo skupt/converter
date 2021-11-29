@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import rozaryonov.converter.service.StorageService;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.stream.Collectors;
 
@@ -29,12 +28,12 @@ public class FileUploadController {
 
     @GetMapping("/")
     public String listUploadedFiles(Model model, @PathVariable ("userLogin") String userLogin, Principal principal,
-                                    @Value("${server.servlet.context-path}") String contextPath) throws IOException {
+                                    @Value("${server.servlet.context-path}") String contextPath) {
         model.addAttribute("currentUser", principal.getName());
         model.addAttribute("files", storageService.loadAll(principal.getName()).map(
                 path -> MvcUriComponentsBuilder.fromController(GuestController.class)
                         .build().toUri().resolve((contextPath + "/users/"
-                                + principal.getName() + "/files/" + path.toString()).replaceAll("\\s", "%20"))
+                                + principal.getName() + "/files/" + path.toString()).replaceAll("\\s", "_"))
                         ).collect(Collectors.toList()));
 
         return "uploadForm";

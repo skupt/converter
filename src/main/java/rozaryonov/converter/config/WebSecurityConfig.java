@@ -3,7 +3,6 @@ package rozaryonov.converter.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -31,33 +30,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-    }
-
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+//    }
+//
 
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
+                    .anyRequest().permitAll()
+                    .and()
                 .formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/j_spring_security_check")
-                .defaultSuccessUrl("/authorized_zone_redirection")
-                .failureUrl("/?error=true")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and()
+                    .loginPage("/")
+                    .loginProcessingUrl("/j_spring_security_check")
+                    .defaultSuccessUrl("/authorized_zone_redirection")
+                    .failureUrl("/?error=true")
+                    .usernameParameter("username")
+                    .passwordParameter("password")
+                    .and()
                 .logout()
-                .logoutUrl("/users/**/logout")
-                .clearAuthentication(true)
-                .logoutSuccessUrl("/")
-                .and()
+                    .logoutUrl("/users/**/logout")
+                    .clearAuthentication(true)
+                    .logoutSuccessUrl("/")
+                    .and()
                 .rememberMe()
-                .tokenRepository(this.persistentTokenRepository())
-                .tokenValiditySeconds(1*24*60*60);
+                    .tokenRepository(this.persistentTokenRepository())
+                    .tokenValiditySeconds(1 * 24 * 60 * 60);
     }
 
 }
